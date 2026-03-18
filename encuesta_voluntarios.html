@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Encuesta Voluntarios — Reforestación</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap');
+:root{
+  --c1:#1b4332;--c2:#2d6a4f;--c3:#40916c;--c4:#74c69d;--c6:#d8f3dc;
+  --amber:#f59e0b;--amber2:#fef3c7;--red:#dc2626;--red2:#fee2e2;
+  --w:#fff;--t:#0f2318;--t2:#2d5a3d;--t3:#74aa85;
+  --sh:0 4px 24px rgba(15,51,32,.13);--r:20px;--rs:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#d8f3dc 100%);min-height:100vh;color:var(--t);}
+
+/* HERO HEADER */
+.hero{padding:36px 20px 24px;text-align:center;color:#fff;}
+.hero-icon{font-size:3rem;margin-bottom:10px;display:block;}
+.hero-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;line-height:1.2;margin-bottom:6px;}
+.hero-sub{font-size:.88rem;opacity:.8;line-height:1.5;max-width:340px;margin:0 auto;}
+
+/* PROGRESS DOTS */
+.dots-wrap{display:flex;justify-content:center;gap:8px;padding:0 20px 20px;}
+.dot{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.3);transition:all .3s;}
+.dot.active{background:#fff;transform:scale(1.2);}
+.dot.done{background:var(--c4);}
+
+/* CARD WRAP */
+.card-wrap{max-width:500px;margin:0 auto;padding:0 16px 100px;}
+@keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARD */
+.card{background:var(--w);border-radius:var(--r);padding:24px 22px;box-shadow:var(--sh);animation:fu .3s ease;}
+.q-step{font-size:.72rem;font-weight:700;color:var(--c3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
+.q-text{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.12rem;color:var(--t);line-height:1.4;margin-bottom:18px;}
+.q-hint{font-size:.78rem;color:var(--t3);margin-top:-12px;margin-bottom:16px;}
+
+/* YES/NO */
+.yn{display:flex;gap:10px;}
+.yb{flex:1;padding:18px 10px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--t2);}
+.yb .yi{font-size:1.8rem;}
+.yb:active{transform:scale(.96);}
+.yb.sy{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.yb.sn{background:var(--red2);border-color:var(--red);color:var(--red);}
+
+/* RADIO OPTS — big tap targets */
+.ro-list{display:flex;flex-direction:column;gap:9px;}
+.ro{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
+.ro:active{transform:scale(.98);}
+.ro.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.rc{width:22px;height:22px;border:2.5px solid #bbd4c0;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;}
+.ro.sel .rc{background:var(--c3);border-color:var(--c3);}
+.ro.sel .rc::after{content:'';width:7px;height:7px;background:#fff;border-radius:50%;}
+
+/* CHECKBOX */
+.co-list{display:flex;flex-direction:column;gap:9px;}
+.co{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
+.co:active{transform:scale(.98);}
+.co.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.cc{width:22px;height:22px;border:2.5px solid #bbd4c0;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:transparent;transition:all .18s;}
+.co.sel .cc{background:var(--c3);border-color:var(--c3);color:#fff;}
+
+/* STAR RATING */
+.stars{display:flex;justify-content:center;gap:10px;padding:8px 0;}
+.star{font-size:2.8rem;cursor:pointer;transition:all .15s;filter:grayscale(1);opacity:.35;}
+.star:active{transform:scale(.9);}
+.star.on{filter:grayscale(0);opacity:1;}
+
+/* RATING TILES */
+.rt-display{text-align:center;margin-bottom:14px;}
+.rt-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:3.2rem;color:var(--c2);line-height:1;}
+.rt-lbl{font-size:.82rem;color:var(--t3);margin-top:4px;}
+.rt-tiles{display:flex;gap:5px;}
+.rt{flex:1;aspect-ratio:1;border-radius:9px;background:#eaf3ec;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;color:var(--t3);transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.rt:active{transform:scale(.9);}
+.rt.active{color:#fff;}
+.rt[data-v="1"].active{background:#dc2626;}.rt[data-v="2"].active{background:#ea580c;}
+.rt[data-v="3"].active{background:#f97316;}.rt[data-v="4"].active{background:#f59e0b;}
+.rt[data-v="5"].active{background:#eab308;}.rt[data-v="6"].active{background:#84cc16;}
+.rt[data-v="7"].active{background:#22c55e;}.rt[data-v="8"].active{background:#16a34a;}
+.rt[data-v="9"].active{background:#15803d;}.rt[data-v="10"].active{background:#166534;}
+
+/* INPUT */
+.fi{width:100%;padding:14px 16px;border:2.5px solid #e2ebe4;border-radius:var(--rs);font-family:'Nunito Sans',sans-serif;font-size:.95rem;color:var(--t);transition:border-color .18s;background:var(--w);}
+.fi:focus{outline:none;border-color:var(--c3);}
+.fi::placeholder{color:var(--t3);}
+
+/* NEXT BTN */
+.next-btn{width:100%;padding:18px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:900;font-size:1.05rem;cursor:pointer;transition:all .18s;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.next-btn:active{transform:scale(.97);}
+.next-btn.submit{background:linear-gradient(135deg,#1b4332,var(--c2));}
+.back-link{text-align:center;margin-top:14px;font-size:.82rem;color:rgba(255,255,255,.7);cursor:pointer;padding:6px;}
+.back-link:active{opacity:.6;}
+
+/* FIXED BOTTOM */
+.bottom-area{max-width:500px;margin:0 auto;padding:0 16px;}
+
+/* SUCCESS */
+.succ-wrap{max-width:500px;margin:0 auto;padding:0 16px 40px;}
+.succ{background:var(--w);border-radius:var(--r);padding:40px 28px;text-align:center;box-shadow:var(--sh);}
+.succ-icon{font-size:4rem;margin-bottom:16px;display:block;}
+.succ-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;color:var(--c1);margin-bottom:8px;}
+.succ-msg{color:var(--t3);font-size:.92rem;line-height:1.7;margin-bottom:24px;}
+.succ-thanks{background:var(--c6);border-radius:var(--rs);padding:16px 20px;font-family:'Nunito',sans-serif;font-weight:700;color:var(--c2);font-size:.95rem;line-height:1.5;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--c1);color:#fff;padding:12px 22px;border-radius:99px;font-size:.86rem;font-weight:700;opacity:0;transition:all .28s;z-index:500;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* SYNC STATUS */
+.sync-bar{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;font-size:.76rem;font-weight:700;color:rgba(255,255,255,.6);}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--c4);}
+.sync-dot.off{background:var(--amber);}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="hero-icon">🌱</span>
+  <div class="hero-title">¡Gracias por reforestar!</div>
+  <div class="hero-sub">Cuéntanos cómo fue tu experiencia como voluntario. Son solo 7 preguntas y te tomará menos de 3 minutos.</div>
+</div>
+
+<!-- SYNC STATUS -->
+<div class="sync-bar">
+  <div class="sync-dot" id="syncDot"></div>
+  <span id="syncTxt">Verificando conexión...</span>
+</div>
+
+<!-- PROGRESS DOTS -->
+<div class="dots-wrap" id="dotsWrap"></div>
+
+<div class="toast" id="toast"></div>
+
+<!-- SURVEY CONTENT -->
+<div class="card-wrap" id="cardWrap"></div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_RKBgAbf7wBdAc_rJgZXPBsh2RuGixY_cYDP_gQisKGtpO2fEZs7DYHOLtr6viLwwlQ/exec';
+const STORAGE_KEY = 'vol_surveys';
+const TIPO = 'VOLUNTARIOS';
+
+const RL = {1:'Muy mala',2:'Mala',3:'Regular',4:'Aceptable',5:'Regular',
+            6:'Aceptable',7:'Buena',8:'Muy buena',9:'Excelente',10:'Perfecta'};
+
+let cur = 0;
+let ans = {};
+let surveyId = '';
+
+// ── STEPS ────────────────────────────────────────────
+const STEPS = [
+  { render: renderS1 },  // Datos básicos: parque, fecha, edad, sexo
+  { render: renderS2 },  // Satisfacción general
+  { render: renderS3 },  // Organización y logística
+  { render: renderS4 },  // Impacto percibido en el parque
+  { render: renderS5 },  // Motivación para volver
+  { render: renderS6 },  // Calificación general 1-10
+  { render: renderS7 },  // Comentario libre
+];
+
+// ── INIT ─────────────────────────────────────────────
+window.addEventListener('load', () => {
+  surveyId = 'VOL-' + Date.now();
+  ans = { motivaciones: [] };
+  buildDots();
+  renderStep();
+  updateOnline();
+  window.addEventListener('online',  updateOnline);
+  window.addEventListener('offline', updateOnline);
+});
+
+function buildDots() {
+  const w = document.getElementById('dotsWrap');
+  w.innerHTML = STEPS.map((_, i) => `<div class="dot" id="dot${i}"></div>`).join('');
+}
+
+function updateDots() {
+  STEPS.forEach((_, i) => {
+    const d = document.getElementById('dot' + i);
+    if (i < cur)       { d.className = 'dot done'; }
+    else if (i === cur){ d.className = 'dot active'; }
+    else               { d.className = 'dot'; }
+  });
+}
+
+// ── RENDER ───────────────────────────────────────────
+function renderStep() {
+  const w = document.getElementById('cardWrap');
+  w.innerHTML = '';
+  STEPS[cur].render(w);
+  updateDots();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── STEP 1: Datos básicos ────────────────────────────
+function renderS1(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 1 de 7</div>
+    <div class="q-text">Antes de empezar, cuéntanos un poco sobre ti</div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.78rem;font-weight:700;color:var(--t3);margin-bottom:6px;">¿En qué parque participaste?</div>
+      <input class="fi" id="parque" type="text" placeholder="Nombre del parque" value="${esc(ans.parque||'')}">
+    </div>
+
+    <div style="margin-bottom:14px;">
+      <div style="font-size:.78rem;font-weight:700;color:var(--t3);margin-bottom:6px;">¿Cuántos años tienes?</div>
+      <div style="display:flex;border-radius:var(--rs);overflow:hidden;border:2.5px solid #e2ebe4;">
+        <button onclick="adj('edad',-1)" style="width:52px;background:var(--c6);border:none;font-size:1.4rem;font-weight:700;color:var(--c2);cursor:pointer;flex-shrink:0;">−</button>
+        <input id="edad" type="number" min="15" max="80" value="${ans.edad||25}"
+          style="flex:1;height:50px;border:none;text-align:center;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c2);outline:none;">
+        <button onclick="adj('edad',1)" style="width:52px;background:var(--c6);border:none;font-size:1.4rem;font-weight:700;color:var(--c2);cursor:pointer;flex-shrink:0;">+</button>
+      </div>
+    </div>
+
+    <div style="margin-bottom:4px;">
+      <div style="font-size:.78rem;font-weight:700;color:var(--t3);margin-bottom:8px;">Sexo</div>
+      <div class="ro-list">
+        ${radio('sexo','Mujer','👩 Mujer')}
+        ${radio('sexo','Hombre','👨 Hombre')}
+        ${radio('sexo','Prefiere no decir','— Prefiere no decir')}
+      </div>
+    </div>
+  </div>
+  ${navBtns(false, 'Siguiente →')}`;
+}
+
+// ── STEP 2: Satisfacción general ─────────────────────
+function renderS2(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 2 de 7 · Satisfacción</div>
+    <div class="q-text">¿Qué tan satisfecho(a) estás con tu experiencia como voluntario(a) hoy?</div>
+    <div class="stars" id="starsWrap">
+      ${[1,2,3,4,5].map(v=>`<span class="star ${(ans.satisfaccion||0)>=v?'on':''}" onclick="selStar(${v})">⭐</span>`).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--t3);padding:0 4px;margin-top:6px;">
+      <span>Nada satisfecho</span><span>Muy satisfecho</span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="q-text">¿Fue tu primera vez participando como voluntario en una actividad de este tipo?</div>
+    <div class="yn">
+      ${yn('primeraVez','si','🌱','Primera vez')}
+      ${yn('primeraVez','no','🔄','Ya había participado')}
+    </div>
+  </div>
+  ${navBtns(true, 'Siguiente →')}`;
+}
+
+// ── STEP 3: Organización y logística ─────────────────
+function renderS3(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 3 de 7 · Organización</div>
+    <div class="q-text">¿Cómo calificarías la organización del evento?</div>
+    <div class="ro-list">
+      ${radio('organizacion','Muy buena','😄 Muy buena — todo estuvo claro y bien coordinado')}
+      ${radio('organizacion','Buena','🙂 Buena — algunas cosas mejorables')}
+      ${radio('organizacion','Regular','😐 Regular — hubo confusión o desorganización')}
+      ${radio('organizacion','Mala','😕 Mala — fue difícil participar')}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="q-text">¿Recibiste las herramientas, materiales e instrucciones necesarias?</div>
+    <div class="yn">
+      ${yn('materialesOk','si','✅','Sí, todo bien')}
+      ${yn('materialesOk','no','❌','Faltó algo')}
+    </div>
+  </div>
+  ${navBtns(true, 'Siguiente →')}`;
+}
+
+// ── STEP 4: Impacto percibido ─────────────────────────
+function renderS4(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 4 de 7 · Impacto</div>
+    <div class="q-text">Después de participar, ¿sientes que tu trabajo contribuyó a mejorar el parque?</div>
+    <div class="yn">
+      ${yn('sintioCambio','si','🌳','Sí, lo siento')}
+      ${yn('sintioCambio','no','🤔','No estoy seguro(a)')}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="q-text">¿Qué fue lo más valioso de la experiencia para ti?</div>
+    <div class="q-hint">Puedes elegir varias opciones</div>
+    <div class="co-list">
+      ${chk('motivaciones','Contribuir al medio ambiente','🌿 Contribuir al medio ambiente')}
+      ${chk('motivaciones','Conocer a otras personas','👥 Conocer a otras personas')}
+      ${chk('motivaciones','Aprender sobre reforestación','📚 Aprender sobre reforestación')}
+      ${chk('motivaciones','Sentirme útil en mi comunidad','🏘️ Sentirme útil en mi comunidad')}
+      ${chk('motivaciones','Actividad física al aire libre','🏃 Actividad física al aire libre')}
+    </div>
+  </div>
+  ${navBtns(true, 'Siguiente →')}`;
+}
+
+// ── STEP 5: Motivación para volver ───────────────────
+function renderS5(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 5 de 7 · Continuidad</div>
+    <div class="q-text">¿Volverías a participar como voluntario(a) en una próxima jornada de reforestación?</div>
+    <div class="yn">
+      ${yn('volveria','si','🙋','¡Sí, con gusto!')}
+      ${yn('volveria','no','🤷','Probablemente no')}
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:10px;">
+    <div class="q-text">¿Recomendarías a alguien más participar como voluntario?</div>
+    <div class="yn">
+      ${yn('recomendaria','si','📣','¡Sí, lo recomendaría!')}
+      ${yn('recomendaria','no','🤐','Probablemente no')}
+    </div>
+  </div>
+  ${navBtns(true, 'Siguiente →')}`;
+}
+
+// ── STEP 6: Calificación 1-10 ────────────────────────
+function renderS6(w) {
+  const tiles = Array.from({length:10},(_,i)=>{
+    const v=i+1, act=ans.calificacion===v?'active':'';
+    return `<button class="rt ${act}" data-v="${v}" onclick="selRating(${v},this)">${v}</button>`;
+  }).join('');
+
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 6 de 7 · Calificación</div>
+    <div class="q-text">En general, ¿cómo calificarías la jornada de reforestación del día de hoy?</div>
+    <div style="font-size:.78rem;color:var(--t3);margin-bottom:16px;">1 = muy mala &nbsp;·&nbsp; 10 = excelente</div>
+    <div class="rt-display">
+      <div class="rt-num" id="rtNum">${ans.calificacion||'—'}</div>
+      <div class="rt-lbl" id="rtLbl">${ans.calificacion?RL[ans.calificacion]:'Toca un número'}</div>
+    </div>
+    <div class="rt-tiles">${tiles}</div>
+  </div>
+  ${navBtns(true, 'Siguiente →')}`;
+}
+
+// ── STEP 7: Comentario libre ─────────────────────────
+function renderS7(w) {
+  w.innerHTML = `
+  <div class="card">
+    <div class="q-step">Paso 7 de 7 · Comentarios</div>
+    <div class="q-text">¿Tienes algún comentario, sugerencia o algo que quieras compartir sobre la jornada?</div>
+    <div style="font-size:.78rem;color:var(--t3);margin-bottom:12px;">Este campo es opcional</div>
+    <textarea class="fi" id="comentario" rows="5"
+      placeholder="Escribe aquí tu comentario..."
+      style="resize:vertical;min-height:110px;">${esc(ans.comentario||'')}</textarea>
+  </div>
+  ${navBtns(true, '✅ Enviar respuestas', true)}`;
+}
+
+// ── WIDGET HELPERS ───────────────────────────────────
+function radio(field, val, label) {
+  const sel = ans[field]===val?'sel':'';
+  return `<div class="ro ${sel}" onclick="selR('${field}','${val}',this)"><div class="rc"></div>${label}</div>`;
+}
+
+function yn(field, val, icon, label) {
+  let cls='yb';
+  if(ans[field]===val) cls+=(val==='si'?' sy':' sn');
+  return `<button class="${cls}" onclick="selYN('${field}','${val}',this)">
+    <span class="yi">${icon}</span>${label}
+  </button>`;
+}
+
+function chk(field, val, label) {
+  const arr=ans[field]||[], sel=arr.includes(val)?'sel':'', mk=arr.includes(val)?'✓':'';
+  return `<div class="co ${sel}" onclick="togC('${field}','${val}',this)"><div class="cc">${mk}</div>${label}</div>`;
+}
+
+function navBtns(showBack, nextLabel, isSubmit=false) {
+  const back = showBack
+    ? `<div class="back-link" onclick="prev()">← Paso anterior</div>`
+    : `<div class="back-link" style="opacity:0;pointer-events:none;">·</div>`;
+  return `
+    <button class="next-btn ${isSubmit?'submit':''}" onclick="next()">${nextLabel}</button>
+    ${back}`;
+}
+
+function esc(s){ return String(s).replace(/"/g,'&quot;'); }
+
+// ── INTERACTIONS ─────────────────────────────────────
+function selR(field,val,el){
+  ans[field]=val;
+  el.closest('.ro-list').querySelectorAll('.ro').forEach(r=>r.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function selYN(field,val,el){
+  ans[field]=val;
+  el.closest('.yn').querySelectorAll('.yb').forEach(b=>b.className='yb');
+  el.className='yb '+(val==='si'?' sy':' sn');
+}
+
+function togC(field,val,el){
+  if(!ans[field])ans[field]=[];
+  const i=ans[field].indexOf(val);
+  if(i>=0){ans[field].splice(i,1);el.classList.remove('sel');el.querySelector('.cc').textContent='';}
+  else    {ans[field].push(val); el.classList.add('sel');   el.querySelector('.cc').textContent='✓';}
+}
+
+function selStar(v){
+  ans.satisfaccion=v;
+  document.querySelectorAll('.star').forEach((s,i)=>{
+    s.className='star'+(i<v?' on':'');
+  });
+}
+
+function selRating(v,el){
+  ans.calificacion=v;
+  document.querySelectorAll('.rt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('rtNum').textContent=v;
+  document.getElementById('rtLbl').textContent=RL[v]||'';
+}
+
+function adj(id,d){
+  const el=document.getElementById(id);
+  el.value=Math.max(15,Math.min(80,(parseInt(el.value)||25)+d));
+  ans.edad=el.value;
+}
+
+// ── NAVIGATION ───────────────────────────────────────
+function next(){
+  if(!collectAndValidate()) return;
+  if(cur===STEPS.length-1){ submit(); return; }
+  cur++; renderStep();
+}
+
+function prev(){
+  collectCurrent();
+  if(cur>0){ cur--; renderStep(); }
+}
+
+function collectCurrent(){
+  if(cur===0){
+    ans.parque = document.getElementById('parque')?.value.trim()||'';
+    ans.edad   = document.getElementById('edad')?.value||25;
+  }
+  if(cur===6){
+    ans.comentario = document.getElementById('comentario')?.value.trim()||'';
+  }
+}
+
+function collectAndValidate(){
+  collectCurrent();
+  if(cur===0){
+    if(!ans.parque){ toast('⚠️ Escribe el nombre del parque'); return false; }
+    if(!ans.sexo)  { toast('⚠️ Selecciona tu sexo'); return false; }
+  }
+  if(cur===1 && !ans.satisfaccion){ toast('⚠️ Selecciona tu nivel de satisfacción'); return false; }
+  if(cur===2 && !ans.organizacion){ toast('⚠️ Califica la organización'); return false; }
+  if(cur===4 && !ans.volveria)    { toast('⚠️ Responde si volverías a participar'); return false; }
+  if(cur===5 && !ans.calificacion){ toast('⚠️ Selecciona una calificación'); return false; }
+  return true;
+}
+
+// ── SUBMIT ───────────────────────────────────────────
+function submit(){
+  collectCurrent();
+  const now=new Date();
+  const record = {
+    tipo:             TIPO,
+    id:               surveyId,
+    fecha:            now.toLocaleDateString('es-MX'),
+    hora:             now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),
+    parque:           ans.parque||'',
+    edad:             ans.edad||'',
+    sexo:             ans.sexo||'',
+    primera_vez:      ans.primeraVez==='si'?'Sí':'No',
+    satisfaccion:     ans.satisfaccion||'',
+    organizacion:     ans.organizacion||'',
+    materiales_ok:    ans.materialesOk==='si'?'Sí':'No',
+    sintio_cambio:    ans.sintioCambio==='si'?'Sí':'No',
+    lo_mas_valioso:   (ans.motivaciones||[]).join(' | '),
+    volveria:         ans.volveria==='si'?'Sí':'No',
+    recomendaria:     ans.recomendaria==='si'?'Sí':'No',
+    calificacion:     ans.calificacion||'',
+    comentario:       ans.comentario||''
+  };
+
+  saveLocal(record);
+  sendToSheets(record).then(ok=>{
+    if(ok) markSent(record.id);
+    showSuccess(ok);
+  });
+}
+
+function showSuccess(synced){
+  document.getElementById('dotsWrap').innerHTML =
+    STEPS.map(()=>`<div class="dot done"></div>`).join('');
+
+  const w = document.getElementById('cardWrap');
+  w.innerHTML = `
+  <div class="succ-wrap">
+    <div class="succ">
+      <span class="succ-icon">🌳</span>
+      <div class="succ-title">¡Muchas gracias!</div>
+      <div class="succ-msg">
+        Tu opinión nos ayuda a mejorar cada jornada de reforestación.<br>
+        Juntos estamos transformando nuestros parques.
+      </div>
+      <div class="succ-thanks">
+        🌱 Cada árbol plantado hoy es un regalo para el futuro.<br>
+        ¡Esperamos verte en la próxima jornada!
+      </div>
+      ${!synced ? `<div style="margin-top:14px;font-size:.78rem;color:var(--t3);">
+        📱 Tu respuesta está guardada y se enviará automáticamente cuando haya conexión.
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+// ── STORAGE ──────────────────────────────────────────
+function saveLocal(r){
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  all.push({...r,_sent:false,_at:new Date().toISOString()});
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
+}
+
+function markSent(id){
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const i=all.findIndex(r=>r.id===id);
+  if(i>=0){all[i]._sent=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(all));}
+}
+
+async function sendToSheets(r){
+  if(!navigator.onLine) return false;
+  try{
+    await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});
+    return true;
+  }catch(e){return false;}
+}
+
+// Auto-sync pending on reconnect
+window.addEventListener('online', async () => {
+  updateOnline();
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const pend=all.filter(r=>!r._sent);
+  for(const r of pend){ if(await sendToSheets(r)) markSent(r.id); }
+});
+
+// ── ONLINE ───────────────────────────────────────────
+function updateOnline(){
+  const dot=document.getElementById('syncDot');
+  const txt=document.getElementById('syncTxt');
+  if(navigator.onLine){
+    dot.className='sync-dot';
+    txt.textContent='Conectado — tus respuestas se enviarán al instante';
+  } else {
+    dot.className='sync-dot off';
+    txt.textContent='Sin conexión — se guardará localmente';
+  }
+}
+
+// ── TOAST ────────────────────────────────────────────
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window._tt); window._tt=setTimeout(()=>t.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
