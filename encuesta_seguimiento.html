@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Seguimiento — Parques</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap');
+:root{
+  --c1:#1a2d4a;--c2:#1e4d8c;--c3:#3273dc;--c4:#5b9ef5;--c6:#e8f0fe;
+  --green:#16a34a;--green2:#dcfce7;
+  --amber:#f59e0b;--amber2:#fef3c7;--red:#dc2626;--red2:#fee2e2;
+  --w:#fff;--t:#0d1b2e;--t2:#2d4a7a;--t3:#7a98c2;
+  --sh:0 4px 20px rgba(15,30,60,.12);--r:18px;--rs:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Nunito Sans',sans-serif;background:#f0f4fa;min-height:100vh;color:var(--t);}
+
+.tb{background:var(--c1);color:#fff;height:60px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;}
+.tb-l{display:flex;align-items:center;gap:11px;}
+.tb-logo{width:36px;height:36px;background:var(--c3);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;}
+.tb-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:.95rem;line-height:1.2;}
+.tb-sub{font-size:.68rem;opacity:.55;}
+.tb-r{display:flex;align-items:center;gap:7px;}
+.sb{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:99px;font-size:.7rem;font-weight:700;border:none;}
+.sb.on{background:rgba(91,158,245,.2);color:var(--c4);}
+.sb.off{background:rgba(245,158,11,.2);color:var(--amber);}
+.sb .dot{width:6px;height:6px;border-radius:50%;}
+.sb.on .dot{background:var(--c4);animation:pu 2s infinite;}
+.sb.off .dot{background:var(--amber);}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.pc{background:var(--amber);color:var(--c1);font-size:.7rem;font-weight:800;padding:2px 8px;border-radius:99px;display:none;cursor:pointer;}
+.pc.show{display:inline-block;}
+.hb{background:rgba(255,255,255,.12);border:none;color:#fff;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:1.1rem;}
+
+.pb-wrap{background:var(--c2);padding:7px 20px 9px;}
+.pb-meta{display:flex;justify-content:space-between;color:rgba(255,255,255,.65);font-size:.7rem;font-weight:600;margin-bottom:5px;}
+.pb-track{background:rgba(255,255,255,.2);border-radius:99px;height:5px;overflow:hidden;}
+.pb-fill{background:linear-gradient(90deg,var(--c4),var(--amber));height:100%;border-radius:99px;transition:width .45s ease;}
+
+.wrap{max-width:780px;margin:0 auto;padding:18px 16px 100px;}
+@keyframes fu{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.sh{background:var(--c1);color:#fff;border-radius:var(--r) var(--r) 0 0;padding:15px 18px;display:flex;align-items:center;gap:12px;margin-bottom:2px;}
+.sh-icon{width:44px;height:44px;background:var(--c3);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:1.35rem;flex-shrink:0;}
+.sh-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.02rem;}
+.sh-sub{font-size:.73rem;opacity:.6;margin-top:1px;}
+
+.seg-banner{background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;border-radius:var(--rs);padding:14px 18px;margin-bottom:8px;display:flex;align-items:center;gap:12px;font-size:.88rem;font-weight:600;line-height:1.4;}
+
+.card{background:var(--w);border-radius:var(--rs);padding:17px 18px;margin-bottom:7px;box-shadow:var(--sh);}
+.card:last-child{border-radius:var(--rs) var(--rs) var(--r) var(--r);}
+.qn{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;background:var(--c6);color:var(--c2);font-family:'Nunito',sans-serif;font-weight:800;font-size:.75rem;border-radius:6px;margin-bottom:8px;}
+.qt{font-family:'Nunito',sans-serif;font-weight:700;font-size:.98rem;color:var(--t);line-height:1.4;margin-bottom:13px;}
+.qh{font-size:.75rem;color:var(--t3);margin-top:-8px;margin-bottom:11px;}
+.new-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green2);color:var(--green);font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:99px;margin-bottom:9px;}
+
+.yn{display:flex;gap:9px;}
+.yb{flex:1;padding:15px;border:2.5px solid #dde5f0;border-radius:var(--rs);background:var(--w);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all .17s;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--t2);}
+.yb:active{transform:scale(.97);}
+.yb.sy{background:var(--green2);border-color:var(--green);color:var(--green);}
+.yb.sn{background:var(--red2);border-color:var(--red);color:var(--red);}
+
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.ro{padding:13px 15px;border:2.5px solid #dde5f0;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .17s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;color:var(--t2);display:flex;align-items:center;gap:8px;user-select:none;}
+.ro:active{transform:scale(.98);}
+.ro.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.rc{width:19px;height:19px;border:2.5px solid #b0c4e0;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ro.sel .rc{background:var(--c3);border-color:var(--c3);}
+.ro.sel .rc::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%;}
+
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.co{padding:13px 15px;border:2.5px solid #dde5f0;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .17s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.9rem;color:var(--t2);display:flex;align-items:center;gap:8px;user-select:none;}
+.co:active{transform:scale(.98);}
+.co.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.cc{width:19px;height:19px;border:2.5px solid #b0c4e0;border-radius:5px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:transparent;}
+.co.sel .cc{background:var(--c3);border-color:var(--c3);color:#fff;}
+
+.scale-opts{display:flex;gap:6px;flex-wrap:wrap;}
+.sc-btn{flex:1;min-width:0;padding:12px 4px;border:2.5px solid #dde5f0;border-radius:8px;background:var(--w);font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer;transition:all .15s;color:var(--t3);text-align:center;}
+.sc-btn:active{transform:scale(.95);}
+.sc-btn.s1{background:#fee2e2;border-color:#dc2626;color:#dc2626;}
+.sc-btn.s2{background:#fef3c7;border-color:#f59e0b;color:#b45309;}
+.sc-btn.s3{background:#fef9c3;border-color:#ca8a04;color:#854d0e;}
+.sc-btn.s4{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.sc-btn.s5{background:var(--green2);border-color:var(--green);color:#14532d;}
+
+.cmp-opts{display:flex;gap:6px;}
+.cmp-btn{flex:1;padding:13px 4px;border:2.5px solid #dde5f0;border-radius:8px;background:var(--w);font-family:'Nunito',sans-serif;font-weight:800;font-size:.78rem;cursor:pointer;transition:all .15s;color:var(--t3);text-align:center;line-height:1.3;}
+.cmp-btn:active{transform:scale(.95);}
+.cmp-btn.cn{background:#fee2e2;border-color:#dc2626;color:#dc2626;}
+.cmp-btn.ci{background:#fef9c3;border-color:#ca8a04;color:#854d0e;}
+.cmp-btn.cp{background:var(--c6);border-color:var(--c3);color:var(--c2);}
+.cmp-btn.cm{background:var(--green2);border-color:var(--green);color:#14532d;}
+
+.rt-display{text-align:center;margin-bottom:12px;}
+.rt-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:3rem;color:var(--c2);line-height:1;}
+.rt-lbl{font-size:.8rem;color:var(--t3);margin-top:3px;}
+.rt-tiles{display:flex;gap:4px;}
+.rt{flex:1;aspect-ratio:1;border-radius:8px;background:#e8eef8;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.82rem;color:var(--t3);transition:all .14s;display:flex;align-items:center;justify-content:center;}
+.rt:active{transform:scale(.9);}
+.rt.active{color:#fff;}
+.rt[data-v="1"].active{background:#dc2626;}.rt[data-v="2"].active{background:#ea580c;}
+.rt[data-v="3"].active{background:#f97316;}.rt[data-v="4"].active{background:#f59e0b;}
+.rt[data-v="5"].active{background:#eab308;}.rt[data-v="6"].active{background:#84cc16;}
+.rt[data-v="7"].active{background:#22c55e;}.rt[data-v="8"].active{background:#16a34a;}
+.rt[data-v="9"].active{background:#15803d;}.rt[data-v="10"].active{background:#166534;}
+
+.fi{width:100%;padding:13px 15px;border:2.5px solid #dde5f0;border-radius:var(--rs);font-family:'Nunito Sans',sans-serif;font-size:.95rem;color:var(--t);transition:border-color .17s;background:var(--w);}
+.fi:focus{outline:none;border-color:var(--c3);}
+.fi::placeholder{color:var(--t3);}
+.ir2{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.ir3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;}
+.fl{font-size:.76rem;font-weight:700;color:var(--t3);margin-bottom:5px;}
+
+.num-inp{display:flex;}
+.num-btn{width:48px;height:48px;border:2.5px solid #dde5f0;background:var(--c6);cursor:pointer;font-size:1.3rem;font-weight:700;color:var(--c2);display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.num-btn:first-child{border-radius:var(--rs) 0 0 var(--rs);}
+.num-btn:last-child{border-radius:0 var(--rs) var(--rs) 0;}
+.num-btn:active{background:var(--c3);color:#fff;}
+.num-val{flex:1;height:48px;border:2.5px solid #dde5f0;border-left:none;border-right:none;text-align:center;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c2);background:var(--w);outline:none;}
+
+.bn{position:fixed;bottom:0;left:0;right:0;background:var(--w);border-top:1px solid #dde5f0;padding:11px 18px;display:flex;gap:9px;box-shadow:0 -3px 18px rgba(15,30,60,.09);z-index:100;}
+.nb{flex:1;padding:14px;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:all .17s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.nb:active{transform:scale(.97);}
+.nb.back{background:var(--c6);color:var(--c2);}
+.nb.next{background:var(--c2);color:#fff;flex:2;}
+.nb.submit{background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;flex:2;}
+
+.succ{background:var(--w);border-radius:var(--r);padding:36px 26px;text-align:center;box-shadow:var(--sh);}
+.succ-icon{width:74px;height:74px;background:var(--c6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.3rem;margin:0 auto 18px;}
+.succ-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.5rem;color:var(--c1);margin-bottom:6px;}
+.succ-id{background:var(--c6);border-radius:var(--rs);padding:12px 18px;margin:16px 0;font-family:'Nunito',sans-serif;font-weight:700;color:var(--c2);font-size:.9rem;}
+.succ-sync{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:99px;font-size:.8rem;font-weight:700;margin-bottom:16px;}
+.sync-ok{background:var(--green2);color:var(--green);}
+.sync-q{background:var(--amber2);color:#7c5800;}
+.succ-sub{color:var(--t3);font-size:.87rem;line-height:1.6;margin-bottom:20px;}
+.btn-new{width:100%;padding:16px;background:var(--c2);color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:800;font-size:1.05rem;cursor:pointer;transition:all .17s;}
+.btn-new:active{transform:scale(.98);}
+
+.panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;align-items:flex-end;justify-content:center;}
+.panel.open{display:flex;}
+.panel-sheet{background:var(--w);border-radius:var(--r) var(--r) 0 0;padding:20px;width:100%;max-width:780px;max-height:85vh;overflow-y:auto;animation:su .24s ease;}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.panel-handle{width:38px;height:4px;background:#dde5f0;border-radius:99px;margin:0 auto 16px;}
+.panel-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.1rem;color:var(--c1);margin-bottom:14px;}
+.pi{background:#f5f8fe;border-radius:var(--rs);padding:13px 16px;margin-bottom:7px;display:flex;align-items:center;justify-content:space-between;}
+.pi-id{font-family:'Nunito',sans-serif;font-weight:700;color:var(--c2);font-size:.87rem;}
+.pi-d{color:var(--t3);font-size:.76rem;margin-top:2px;}
+.badge{padding:3px 9px;border-radius:99px;font-size:.7rem;font-weight:700;}
+.bp{background:var(--amber2);color:#7c5800;}
+.bs{background:var(--c6);color:var(--c2);}
+.sync-all-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:7px;}
+.sync-all-btn:disabled{background:#c5d0e8;color:#8a9fc2;cursor:not-allowed;}
+.empty{text-align:center;padding:24px;color:var(--t3);font-size:.88rem;}
+
+.toast{position:fixed;bottom:88px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--c1);color:#fff;padding:11px 20px;border-radius:99px;font-size:.86rem;font-weight:700;opacity:0;transition:all .28s;z-index:500;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:500px){
+  .ir2,.ir3,.rg,.cg,.cmp-opts{grid-template-columns:1fr;}
+  .cmp-opts{display:flex;flex-direction:column;}
+}
+</style>
+</head>
+<body>
+
+<div class="tb">
+  <div class="tb-l">
+    <div class="tb-logo">🌳</div>
+    <div>
+      <div class="tb-title">Seguimiento — Parques</div>
+      <div class="tb-sub">Después de intervención</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <span class="pc" id="pc" onclick="openPanel()">0 pendientes</span>
+    <div class="sb on" id="sb"><div class="dot"></div><span id="st">En línea</span></div>
+    <button class="hb" onclick="openPanel()">☰</button>
+  </div>
+</div>
+
+<div class="pb-wrap">
+  <div class="pb-meta"><span id="plabel">Paso 1 de 7</span><span id="ppct">0%</span></div>
+  <div class="pb-track"><div class="pb-fill" id="pfill" style="width:0%"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="panel" id="panel" onclick="closePanelOutside(event)">
+  <div class="panel-sheet">
+    <div class="panel-handle"></div>
+    <div class="panel-title">☁️ Encuestas guardadas</div>
+    <button class="sync-all-btn" id="syncBtn" onclick="syncAll()">🔄 Sincronizar pendientes</button>
+    <div id="pendList"></div>
+    <button class="nb back" style="width:100%;margin-top:8px;" onclick="closePanel()">Cerrar</button>
+  </div>
+</div>
+
+<div class="wrap" id="surveyWrap"></div>
+
+<div class="bn">
+  <button class="nb back" id="backBtn" onclick="prev()" style="display:none">← Atrás</button>
+  <button class="nb next" id="nextBtn" onclick="next()">Siguiente →</button>
+</div>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz_RKBgAbf7wBdAc_rJgZXPBsh2RuGixY_cYDP_gQisKGtpO2fEZs7DYHOLtr6viLwwlQ/exec';
+const STORAGE_KEY = 'seg_surveys';
+const TIPO = 'SEGUIMIENTO';
+
+const RL = {1:'Muy mala',2:'Mala',3:'Deficiente',4:'Por debajo del promedio',5:'Regular',
+            6:'Aceptable',7:'Buena',8:'Muy buena',9:'Excelente',10:'Perfecta'};
+
+let cur = 0, ans = {}, surveyId = '';
+
+const STEPS = [
+  { label: 'Identificación',  render: renderS1 },
+  { label: 'Uso del parque',  render: renderS2 },
+  { label: 'Limpieza',        render: renderS3 },
+  { label: 'Vegetación',      render: renderS4 },
+  { label: 'Seguridad',       render: renderS5 },
+  { label: 'Calificación',    render: renderS6 },
+  { label: 'Observaciones',   render: renderS7 },
+];
+
+window.addEventListener('load', () => {
+  buildNewSurvey();
+  updateOnline();
+  renderPending();
+  window.addEventListener('online',  () => { updateOnline(); autoSync(); });
+  window.addEventListener('offline', updateOnline);
+});
+
+function buildNewSurvey() {
+  ans = { motivos: [], horSeg: [] };
+  surveyId = 'SEG-' + Date.now();
+  cur = 0;
+  renderStep();
+}
+
+function renderStep() {
+  const wrap = document.getElementById('surveyWrap');
+  wrap.innerHTML = '';
+  wrap.style.animation = 'none';
+  wrap.offsetHeight;
+  wrap.style.animation = 'fu .28s ease';
+  STEPS[cur].render(wrap);
+  const pct = Math.round((cur / (STEPS.length - 1)) * 100);
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('ppct').textContent = pct + '%';
+  document.getElementById('plabel').textContent = STEPS[cur].label + ' — Paso ' + (cur+1) + ' de ' + STEPS.length;
+  document.getElementById('backBtn').style.display = cur === 0 ? 'none' : 'flex';
+  const nb = document.getElementById('nextBtn');
+  nb.textContent = cur === STEPS.length - 1 ? '✅ Enviar encuesta' : 'Siguiente →';
+  nb.className   = cur === STEPS.length - 1 ? 'nb submit' : 'nb next';
+  nb.style.display = 'flex';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderS1(w) {
+  w.innerHTML = `
+  <div class="seg-banner"><span style="font-size:1.4rem">📊</span>
+    <div><strong>Encuesta de Seguimiento</strong><br>Aplicar después de la intervención de reforestación y limpieza.</div>
+  </div>
+  <div class="sh"><div class="sh-icon">📋</div><div>
+    <div class="sh-title">Datos de identificación</div>
+    <div class="sh-sub">Encuestador, parque y encuestado</div>
+  </div></div>
+  <div class="card">
+    <div class="fl">Nombre del encuestador(a)</div>
+    <input class="fi" id="enc" type="text" placeholder="Nombre completo" value="${esc(ans.encuestador||'')}">
+  </div>
+  <div class="card">
+    <div class="fl">Nombre del parque</div>
+    <input class="fi" id="parque" type="text" placeholder="Nombre del parque" value="${esc(ans.parque||'')}">
+  </div>
+  <div class="card">
+    <div class="ir3">
+      <div><div class="fl">Colonia</div><input class="fi" id="colonia" type="text" placeholder="Colonia" value="${esc(ans.colonia||'')}"></div>
+      <div><div class="fl">Calle</div><input class="fi" id="calle" type="text" placeholder="Calle" value="${esc(ans.calle||'')}"></div>
+      <div><div class="fl">Núm.</div><input class="fi" id="numviv" type="text" placeholder="Núm." value="${esc(ans.numVivienda||'')}"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="qt">Perfil del encuestado</div>
+    <div class="rg">
+      ${radio('perfil','Residente cercano','🏠 Residente cercano')}
+      ${radio('perfil','Visitante del parque','🚶 Visitante del parque')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="ir2">
+      <div>
+        <div class="fl">Edad del encuestado</div>
+        <div class="num-inp">
+          <button class="num-btn" onclick="adj('edad',-1)">−</button>
+          <input class="num-val" id="edad" type="number" min="18" max="99" value="${ans.edad||30}">
+          <button class="num-btn" onclick="adj('edad',1)">+</button>
+        </div>
+      </div>
+      <div>
+        <div class="fl">Sexo</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${radio('sexo','Mujer','Mujer')}
+          ${radio('sexo','Hombre','Hombre')}
+          ${radio('sexo','Prefiere no decir','Prefiere no decir')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderS2(w) {
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">🏡</div><div>
+    <div class="sh-title">Frecuencia y uso</div><div class="sh-sub">Preguntas 1 – 3</div>
+  </div></div>
+  <div class="card">
+    <div class="qn">1</div>
+    <div class="qt">¿Usted o su hogar utiliza este parque?</div>
+    <div class="yn">${yn('usaParque','si','✅ Sí')}${yn('usaParque','no','❌ No')}</div>
+  </div>
+  <div class="card">
+    <div class="qn">2</div>
+    <div class="qt">¿Con qué frecuencia visita el parque <em>actualmente</em>?</div>
+    <div class="rg">
+      ${radio('frecuencia','Todos los días','📆 Todos los días')}
+      ${radio('frecuencia','Varias veces a la semana','📅 Varias veces/semana')}
+      ${radio('frecuencia','Una vez a la semana','🗓 Una vez/semana')}
+      ${radio('frecuencia','Algunas veces al mes','📅 Algunas veces/mes')}
+      ${radio('frecuencia','Rara vez','🕐 Rara vez')}
+      ${radio('frecuencia','Nunca','🚫 Nunca')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="qn">3</div>
+    <div class="qt">¿Para qué actividades usa el parque?</div>
+    <div class="qh">Puede seleccionar varias opciones</div>
+    <div class="cg">
+      ${chk('motivos','Ejercicio/deporte','🏃 Ejercicio / deporte')}
+      ${chk('motivos','Pasear mascotas','🐕 Pasear mascotas')}
+      ${chk('motivos','Descanso/recreación','😌 Descanso / recreación')}
+      ${chk('motivos','Juego de niños','🧒 Juego de niños')}
+      ${chk('motivos','Socializar','👥 Socializar')}
+      ${chk('motivos','Paso de camino','🚶 Paso de camino')}
+      ${chk('motivos','Otro','➕ Otro')}
+    </div>
+  </div>`;
+}
+
+function renderS3(w) {
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">🧹</div><div>
+    <div class="sh-title">Limpieza y mantenimiento</div><div class="sh-sub">Preguntas 4 – 6</div>
+  </div></div>
+  <div class="card">
+    <div class="qn">4</div>
+    <div class="qt">¿Cómo califica la limpieza general del parque actualmente?</div>
+    <div class="scale-opts">${scale('limpieza',['Muy mala','Mala','Regular','Buena','Muy buena'])}</div>
+  </div>
+  <div class="card">
+    <div class="qn">5</div>
+    <div class="qt">¿Cómo califica el mantenimiento de instalaciones actualmente?</div>
+    <div class="scale-opts">${scale('mantenimiento',['Muy malo','Malo','Regular','Bueno','Muy bueno'])}</div>
+  </div>
+  <div class="card">
+    <div class="new-badge">🆕 Seguimiento</div>
+    <div class="qn">6</div>
+    <div class="qt">Comparado con <strong>antes de la intervención</strong>, ¿cómo cambió la limpieza?</div>
+    <div class="cmp-opts">${cmp('cmbLimpieza',['Empeoró','Igual','Mejoró un poco','Mejoró mucho'])}</div>
+  </div>`;
+}
+
+function renderS4(w) {
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">🌳</div><div>
+    <div class="sh-title">Vegetación y arbolado</div><div class="sh-sub">Preguntas 7 – 10</div>
+  </div></div>
+  <div class="card">
+    <div class="qn">7</div>
+    <div class="qt">¿Cómo califica la cantidad de árboles y vegetación actualmente?</div>
+    <div class="scale-opts">${scale('cantVeg',['Muy insuficiente','Insuficiente','Suficiente','Abundante'])}</div>
+  </div>
+  <div class="card">
+    <div class="qn">8</div>
+    <div class="qt">¿Cómo califica el estado de los árboles actualmente?</div>
+    <div class="scale-opts">${scale('estadoVeg',['Muy malo','Malo','Regular','Bueno','Muy bueno'])}</div>
+  </div>
+  <div class="card">
+    <div class="new-badge">🆕 Seguimiento</div>
+    <div class="qn">9</div>
+    <div class="qt">¿Notó la plantación de nuevos árboles en el parque?</div>
+    <div class="yn">${yn('notoArboles','si','✅ Sí')}${yn('notoArboles','no','❌ No')}</div>
+  </div>
+  <div class="card">
+    <div class="new-badge">🆕 Seguimiento</div>
+    <div class="qn">10</div>
+    <div class="qt">Comparado con <strong>antes de la intervención</strong>, ¿cómo cambió la vegetación?</div>
+    <div class="cmp-opts">${cmp('cmbVeg',['Empeoró','Igual','Mejoró un poco','Mejoró mucho'])}</div>
+  </div>`;
+}
+
+function renderS5(w) {
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">🔒</div><div>
+    <div class="sh-title">Seguridad percibida</div><div class="sh-sub">Preguntas 11 – 13</div>
+  </div></div>
+  <div class="card">
+    <div class="qn">11</div>
+    <div class="qt">¿Qué tan seguro(a) se siente al visitar el parque actualmente?</div>
+    <div class="scale-opts">${scale('seguridad',['Muy inseguro','Inseguro','Regular','Seguro','Muy seguro'])}</div>
+  </div>
+  <div class="card">
+    <div class="qn">12</div>
+    <div class="qt">¿En qué horarios se siente más seguro(a)?</div>
+    <div class="cg">
+      ${chk('horSeg','Mañana (6–12h)','🌅 Mañana (6–12h)')}
+      ${chk('horSeg','Tarde (12–18h)','☀️ Tarde (12–18h)')}
+      ${chk('horSeg','Noche (18–22h)','🌆 Noche (18–22h)')}
+      ${chk('horSeg','Ningún horario','🚫 Ningún horario')}
+    </div>
+  </div>
+  <div class="card">
+    <div class="new-badge">🆕 Seguimiento</div>
+    <div class="qn">13</div>
+    <div class="qt">Comparado con <strong>antes de la intervención</strong>, ¿cómo cambió la seguridad percibida?</div>
+    <div class="cmp-opts">${cmp('cmbSeguridad',['Empeoró','Igual','Mejoró un poco','Mejoró mucho'])}</div>
+  </div>`;
+}
+
+function renderS6(w) {
+  const tiles = Array.from({length:10},(_,i)=>{
+    const v=i+1, act=ans.calificacion===v?'active':'';
+    return `<button class="rt ${act}" data-v="${v}" onclick="selRating(${v},this)">${v}</button>`;
+  }).join('');
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">⭐</div><div>
+    <div class="sh-title">Calificación general</div><div class="sh-sub">Preguntas 14 – 15</div>
+  </div></div>
+  <div class="card">
+    <div class="qn">14</div>
+    <div class="qt">¿Cómo califica la condición general del parque <em>hoy</em>?</div>
+    <div class="qh">1 = muy mala &nbsp;·&nbsp; 10 = muy buena</div>
+    <div class="rt-display">
+      <div class="rt-num" id="rtNum">${ans.calificacion||'—'}</div>
+      <div class="rt-lbl" id="rtLbl">${ans.calificacion?RL[ans.calificacion]:'Toca un número'}</div>
+    </div>
+    <div class="rt-tiles">${tiles}</div>
+  </div>
+  <div class="card" style="border-radius:var(--rs) var(--rs) var(--r) var(--r)">
+    <div class="new-badge">🆕 Seguimiento</div>
+    <div class="qn">15</div>
+    <div class="qt">En general, ¿considera que la reforestación e intervención <strong>mejoró</strong> el parque?</div>
+    <div class="yn">${yn('intervencionMejoro','si','✅ Sí')}${yn('intervencionMejoro','no','❌ No')}</div>
+  </div>`;
+}
+
+function renderS7(w) {
+  w.innerHTML = `
+  <div class="sh"><div class="sh-icon">📝</div><div>
+    <div class="sh-title">Observaciones</div><div class="sh-sub">Campo libre — opcional</div>
+  </div></div>
+  <div class="card" style="border-radius:var(--rs) var(--rs) var(--r) var(--r)">
+    <div class="qt">Observaciones del encuestador</div>
+    <div class="qh">Comentarios sobre la intervención, quejas, sugerencias.</div>
+    <textarea class="fi" id="obs" rows="6" placeholder="Observaciones..."
+      style="resize:vertical;min-height:120px;">${esc(ans.observaciones||'')}</textarea>
+  </div>`;
+}
+
+// HELPERS
+function radio(field,val,label){
+  const sel=ans[field]===val?'sel':'';
+  return `<div class="ro ${sel}" onclick="selR('${field}','${val}',this)"><div class="rc"></div>${label}</div>`;
+}
+function yn(field,val,label){
+  let cls='yb';
+  if(ans[field]===val) cls+=(val==='si'?' sy':' sn');
+  return `<button class="${cls}" onclick="selYN('${field}','${val}',this)">${label}</button>`;
+}
+function chk(field,val,label){
+  const arr=ans[field]||[], sel=arr.includes(val)?'sel':'', mk=arr.includes(val)?'✓':'';
+  return `<div class="co ${sel}" onclick="togC('${field}','${val}',this)"><div class="cc">${mk}</div>${label}</div>`;
+}
+function scale(field,opts){
+  const cls=['s1','s2','s3','s4','s5'];
+  return opts.map((o,i)=>{
+    const a=ans[field]===o?cls[i]:'';
+    return `<button class="sc-btn ${a}" onclick="selScale('${field}','${o}',this,'${cls[i]}')">${o}</button>`;
+  }).join('');
+}
+function cmp(field,opts){
+  const cls=['cn','ci','cp','cm'];
+  return opts.map((o,i)=>{
+    const icons=['⬇️','↔️','↑','⬆️'];
+    const a=ans[field]===o?cls[i]:'';
+    return `<button class="cmp-btn ${a}" onclick="selCmp('${field}','${o}',this,'${cls[i]}')">${icons[i]} ${o}</button>`;
+  }).join('');
+}
+function esc(s){return String(s).replace(/"/g,'&quot;');}
+
+// INTERACTIONS
+function selR(field,val,el){
+  ans[field]=val;
+  const p=el.closest('.rg,[style*="flex-direction"]');
+  if(p) p.querySelectorAll('.ro').forEach(r=>r.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function selYN(field,val,el){
+  ans[field]=val;
+  el.closest('.yn').querySelectorAll('.yb').forEach(b=>b.className='yb');
+  el.className='yb '+(val==='si'?'sy':'sn');
+}
+function togC(field,val,el){
+  if(!ans[field])ans[field]=[];
+  const i=ans[field].indexOf(val);
+  if(i>=0){ans[field].splice(i,1);el.classList.remove('sel');el.querySelector('.cc').textContent='';}
+  else{ans[field].push(val);el.classList.add('sel');el.querySelector('.cc').textContent='✓';}
+}
+function selScale(field,val,el,cls){
+  ans[field]=val;
+  el.closest('.scale-opts').querySelectorAll('.sc-btn').forEach(b=>b.className='sc-btn');
+  el.classList.add(cls);
+}
+function selCmp(field,val,el,cls){
+  ans[field]=val;
+  el.closest('.cmp-opts').querySelectorAll('.cmp-btn').forEach(b=>b.className='cmp-btn');
+  el.classList.add(cls);
+}
+function selRating(v,el){
+  ans.calificacion=v;
+  document.querySelectorAll('.rt').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('rtNum').textContent=v;
+  document.getElementById('rtLbl').textContent=RL[v]||'';
+}
+function adj(id,d){
+  const el=document.getElementById(id);
+  el.value=Math.max(18,Math.min(99,(parseInt(el.value)||18)+d));
+  ans.edad=el.value;
+}
+
+// NAVIGATION
+function next(){if(!collectAndValidate())return;if(cur===STEPS.length-1){submit();return;}cur++;renderStep();}
+function prev(){collectCurrent();if(cur>0){cur--;renderStep();}}
+
+function collectCurrent(){
+  if(cur===0){
+    ans.encuestador=document.getElementById('enc')?.value.trim()||'';
+    ans.parque=document.getElementById('parque')?.value.trim()||'';
+    ans.colonia=document.getElementById('colonia')?.value.trim()||'';
+    ans.calle=document.getElementById('calle')?.value.trim()||'';
+    ans.numVivienda=document.getElementById('numviv')?.value.trim()||'';
+    ans.edad=document.getElementById('edad')?.value||30;
+  }
+  if(cur===6){ans.observaciones=document.getElementById('obs')?.value.trim()||'';}
+}
+
+function collectAndValidate(){
+  collectCurrent();
+  if(cur===0){
+    if(!ans.encuestador){toast('⚠️ Escribe el nombre del encuestador');return false;}
+    if(!ans.parque){toast('⚠️ Escribe el nombre del parque');return false;}
+    if(!ans.colonia){toast('⚠️ Escribe la colonia');return false;}
+    if(!ans.perfil){toast('⚠️ Selecciona el perfil del encuestado');return false;}
+    if(!ans.sexo){toast('⚠️ Selecciona el sexo');return false;}
+  }
+  if(cur===1&&!ans.usaParque){toast('⚠️ Indica si usa el parque');return false;}
+  if(cur===2&&!ans.limpieza){toast('⚠️ Califica la limpieza');return false;}
+  if(cur===3&&!ans.cantVeg){toast('⚠️ Califica la vegetación');return false;}
+  if(cur===4&&!ans.seguridad){toast('⚠️ Califica la seguridad');return false;}
+  if(cur===5&&!ans.calificacion){toast('⚠️ Selecciona una calificación');return false;}
+  return true;
+}
+
+// SUBMIT
+function submit(){
+  collectCurrent();
+  const now=new Date();
+  const record={
+    tipo:TIPO, id:surveyId,
+    fecha:now.toLocaleDateString('es-MX'),
+    hora:now.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}),
+    encuestador:ans.encuestador||'', parque:ans.parque||'',
+    colonia:ans.colonia||'', calle:ans.calle||'', num_vivienda:ans.numVivienda||'',
+    perfil:ans.perfil||'', edad:ans.edad||'', sexo:ans.sexo||'',
+    usa_parque:ans.usaParque==='si'?'Sí':'No',
+    frecuencia:ans.frecuencia||'', motivos:(ans.motivos||[]).join(' | '),
+    limpieza:ans.limpieza||'', mantenimiento:ans.mantenimiento||'',
+    cambio_limpieza:ans.cmbLimpieza||'',
+    cant_vegetacion:ans.cantVeg||'', estado_vegetacion:ans.estadoVeg||'',
+    noto_arboles:ans.notoArboles==='si'?'Sí':'No',
+    cambio_vegetacion:ans.cmbVeg||'',
+    seguridad:ans.seguridad||'', horarios_seguros:(ans.horSeg||[]).join(' | '),
+    cambio_seguridad:ans.cmbSeguridad||'',
+    calificacion:ans.calificacion||'',
+    intervencion_mejoro:ans.intervencionMejoro==='si'?'Sí':'No',
+    observaciones:ans.observaciones||''
+  };
+  saveLocal(record);
+  sendToSheets(record).then(ok=>{
+    if(ok) markSent(record.id);
+    showSuccess(record.id,ok);
+  });
+}
+
+function showSuccess(id,synced){
+  const wrap=document.getElementById('surveyWrap');
+  wrap.innerHTML=`
+    <div class="succ">
+      <div class="succ-icon">🎉</div>
+      <div class="succ-title">¡Encuesta guardada!</div>
+      <div class="succ-id">🆔 ${id}</div>
+      <div class="succ-sync ${synced?'sync-ok':'sync-q'}">
+        ${synced?'✅ Enviada a Google Sheets':'⏳ Sin conexión — guardada localmente'}
+      </div>
+      <div class="succ-sub">Encuesta de seguimiento registrada correctamente.</div>
+      <button class="btn-new" onclick="buildNewSurvey()">＋ Nueva encuesta</button>
+    </div>`;
+  document.getElementById('backBtn').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('pfill').style.width='100%';
+  document.getElementById('ppct').textContent='100%';
+  updateChip(); renderPending();
+}
+
+// STORAGE
+function saveLocal(r){const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');all.push({...r,_sent:false,_at:new Date().toISOString()});localStorage.setItem(STORAGE_KEY,JSON.stringify(all));}
+function markSent(id){const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');const i=all.findIndex(r=>r.id===id);if(i>=0){all[i]._sent=true;localStorage.setItem(STORAGE_KEY,JSON.stringify(all));}updateChip();}
+function updateChip(){const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');const n=all.filter(r=>!r._sent).length;const c=document.getElementById('pc');c.textContent=n+(n===1?' pendiente':' pendientes');c.className='pc'+(n>0?' show':'');}
+function renderPending(){
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]').slice().reverse();
+  const w=document.getElementById('pendList'),sb=document.getElementById('syncBtn');
+  const pn=all.filter(r=>!r._sent).length;
+  sb.disabled=pn===0;
+  sb.textContent=pn>0?`🔄 Sincronizar ${pn} pendiente${pn>1?'s':''}`:'✅ Todo sincronizado';
+  if(!all.length){w.innerHTML='<div class="empty">No hay encuestas guardadas.</div>';return;}
+  w.innerHTML=all.map(r=>`<div class="pi"><div><div class="pi-id">${r.id}</div><div class="pi-d">📍 ${r.parque||'—'} · ${r.fecha} ${r.hora}</div></div><span class="badge ${r._sent?'bs':'bp'}">${r._sent?'✅ Enviada':'⏳ Pendiente'}</span></div>`).join('');
+}
+
+async function sendToSheets(r){if(!navigator.onLine)return false;try{await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});return true;}catch(e){return false;}}
+async function syncAll(){
+  if(!navigator.onLine){toast('⚠️ Sin conexión');return;}
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const pend=all.filter(r=>!r._sent);
+  if(!pend.length){toast('✅ Todo sincronizado');return;}
+  toast('🔄 Sincronizando '+pend.length+' encuestas...');
+  let ok=0;
+  for(const r of pend){if(await sendToSheets(r)){markSent(r.id);ok++;}}
+  toast(`✅ Sincronizadas ${ok} de ${pend.length}`);
+  renderPending();
+}
+function autoSync(){const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');if(all.filter(r=>!r._sent).length>0)setTimeout(syncAll,2000);}
+function updateOnline(){const sb=document.getElementById('sb'),st=document.getElementById('st');if(navigator.onLine){sb.className='sb on';st.textContent='En línea';}else{sb.className='sb off';st.textContent='Sin conexión';}}
+function openPanel(){renderPending();document.getElementById('panel').classList.add('open');}
+function closePanel(){document.getElementById('panel').classList.remove('open');}
+function closePanelOutside(e){if(e.target===document.getElementById('panel'))closePanel();}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._tt);window._tt=setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>
