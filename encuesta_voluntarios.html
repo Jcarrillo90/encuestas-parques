@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Encuesta Voluntarios — Reforestación</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap');
+/* System fonts - works offline */
 :root{
   --c1:#1b4332;--c2:#2d6a4f;--c3:#40916c;--c4:#74c69d;--c6:#d8f3dc;
   --amber:#f59e0b;--amber2:#fef3c7;--red:#dc2626;--red2:#fee2e2;
@@ -13,12 +13,12 @@
   --sh:0 4px 24px rgba(15,51,32,.13);--r:20px;--rs:14px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#d8f3dc 100%);min-height:100vh;color:var(--t);}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(160deg,#1b4332 0%,#2d6a4f 40%,#d8f3dc 100%);min-height:100vh;color:var(--t);}
 
 /* HERO HEADER */
 .hero{padding:36px 20px 24px;text-align:center;color:#fff;}
 .hero-icon{font-size:3rem;margin-bottom:10px;display:block;}
-.hero-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;line-height:1.2;margin-bottom:6px;}
+.hero-title{font-family:inherit;font-weight:900;font-size:1.6rem;line-height:1.2;margin-bottom:6px;}
 .hero-sub{font-size:.88rem;opacity:.8;line-height:1.5;max-width:340px;margin:0 auto;}
 
 /* PROGRESS DOTS */
@@ -34,12 +34,12 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 /* CARD */
 .card{background:var(--w);border-radius:var(--r);padding:24px 22px;box-shadow:var(--sh);animation:fu .3s ease;}
 .q-step{font-size:.72rem;font-weight:700;color:var(--c3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;}
-.q-text{font-family:'Nunito',sans-serif;font-weight:800;font-size:1.12rem;color:var(--t);line-height:1.4;margin-bottom:18px;}
+.q-text{font-family:inherit;font-weight:800;font-size:1.12rem;color:var(--t);line-height:1.4;margin-bottom:18px;}
 .q-hint{font-size:.78rem;color:var(--t3);margin-top:-12px;margin-bottom:16px;}
 
 /* YES/NO */
 .yn{display:flex;gap:10px;}
-.yb{flex:1;padding:18px 10px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);font-family:'Nunito',sans-serif;font-weight:800;font-size:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--t2);}
+.yb{flex:1;padding:18px 10px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);font-family:inherit;font-weight:800;font-size:1rem;cursor:pointer;transition:all .18s;display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--t2);}
 .yb .yi{font-size:1.8rem;}
 .yb:active{transform:scale(.96);}
 .yb.sy{background:var(--c6);border-color:var(--c3);color:var(--c2);}
@@ -47,7 +47,7 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 
 /* RADIO OPTS — big tap targets */
 .ro-list{display:flex;flex-direction:column;gap:9px;}
-.ro{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
+.ro{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:inherit;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
 .ro:active{transform:scale(.98);}
 .ro.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
 .rc{width:22px;height:22px;border:2.5px solid #bbd4c0;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s;}
@@ -56,7 +56,7 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 
 /* CHECKBOX */
 .co-list{display:flex;flex-direction:column;gap:9px;}
-.co{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:'Nunito',sans-serif;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
+.co{padding:15px 18px;border:2.5px solid #e2ebe4;border-radius:var(--rs);background:var(--w);cursor:pointer;transition:all .18s;font-family:inherit;font-weight:700;font-size:.95rem;color:var(--t2);display:flex;align-items:center;gap:12px;user-select:none;}
 .co:active{transform:scale(.98);}
 .co.sel{background:var(--c6);border-color:var(--c3);color:var(--c2);}
 .cc{width:22px;height:22px;border:2.5px solid #bbd4c0;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem;color:transparent;transition:all .18s;}
@@ -70,10 +70,10 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 
 /* RATING TILES */
 .rt-display{text-align:center;margin-bottom:14px;}
-.rt-num{font-family:'Nunito',sans-serif;font-weight:900;font-size:3.2rem;color:var(--c2);line-height:1;}
+.rt-num{font-family:inherit;font-weight:900;font-size:3.2rem;color:var(--c2);line-height:1;}
 .rt-lbl{font-size:.82rem;color:var(--t3);margin-top:4px;}
 .rt-tiles{display:flex;gap:5px;}
-.rt{flex:1;aspect-ratio:1;border-radius:9px;background:#eaf3ec;border:none;cursor:pointer;font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem;color:var(--t3);transition:all .15s;display:flex;align-items:center;justify-content:center;}
+.rt{flex:1;aspect-ratio:1;border-radius:9px;background:#eaf3ec;border:none;cursor:pointer;font-family:inherit;font-weight:800;font-size:.85rem;color:var(--t3);transition:all .15s;display:flex;align-items:center;justify-content:center;}
 .rt:active{transform:scale(.9);}
 .rt.active{color:#fff;}
 .rt[data-v="1"].active{background:#dc2626;}.rt[data-v="2"].active{background:#ea580c;}
@@ -83,12 +83,12 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 .rt[data-v="9"].active{background:#15803d;}.rt[data-v="10"].active{background:#166534;}
 
 /* INPUT */
-.fi{width:100%;padding:14px 16px;border:2.5px solid #e2ebe4;border-radius:var(--rs);font-family:'Nunito Sans',sans-serif;font-size:.95rem;color:var(--t);transition:border-color .18s;background:var(--w);}
+.fi{width:100%;padding:14px 16px;border:2.5px solid #e2ebe4;border-radius:var(--rs);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:.95rem;color:var(--t);transition:border-color .18s;background:var(--w);}
 .fi:focus{outline:none;border-color:var(--c3);}
 .fi::placeholder{color:var(--t3);}
 
 /* NEXT BTN */
-.next-btn{width:100%;padding:18px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;border:none;border-radius:var(--rs);font-family:'Nunito',sans-serif;font-weight:900;font-size:1.05rem;cursor:pointer;transition:all .18s;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;}
+.next-btn{width:100%;padding:18px;background:linear-gradient(135deg,var(--c2),var(--c3));color:#fff;border:none;border-radius:var(--rs);font-family:inherit;font-weight:900;font-size:1.05rem;cursor:pointer;transition:all .18s;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px;}
 .next-btn:active{transform:scale(.97);}
 .next-btn.submit{background:linear-gradient(135deg,#1b4332,var(--c2));}
 .back-link{text-align:center;margin-top:14px;font-size:.82rem;color:rgba(255,255,255,.7);cursor:pointer;padding:6px;}
@@ -101,9 +101,9 @@ body{font-family:'Nunito Sans',sans-serif;background:linear-gradient(160deg,#1b4
 .succ-wrap{max-width:500px;margin:0 auto;padding:0 16px 40px;}
 .succ{background:var(--w);border-radius:var(--r);padding:40px 28px;text-align:center;box-shadow:var(--sh);}
 .succ-icon{font-size:4rem;margin-bottom:16px;display:block;}
-.succ-title{font-family:'Nunito',sans-serif;font-weight:900;font-size:1.6rem;color:var(--c1);margin-bottom:8px;}
+.succ-title{font-family:inherit;font-weight:900;font-size:1.6rem;color:var(--c1);margin-bottom:8px;}
 .succ-msg{color:var(--t3);font-size:.92rem;line-height:1.7;margin-bottom:24px;}
-.succ-thanks{background:var(--c6);border-radius:var(--rs);padding:16px 20px;font-family:'Nunito',sans-serif;font-weight:700;color:var(--c2);font-size:.95rem;line-height:1.5;}
+.succ-thanks{background:var(--c6);border-radius:var(--rs);padding:16px 20px;font-family:inherit;font-weight:700;color:var(--c2);font-size:.95rem;line-height:1.5;}
 
 /* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--c1);color:#fff;padding:12px 22px;border-radius:99px;font-size:.86rem;font-weight:700;opacity:0;transition:all .28s;z-index:500;white-space:nowrap;pointer-events:none;}
@@ -212,7 +212,7 @@ function renderS1(w) {
       <div style="display:flex;border-radius:var(--rs);overflow:hidden;border:2.5px solid #e2ebe4;">
         <button onclick="adj('edad',-1)" style="width:52px;background:var(--c6);border:none;font-size:1.4rem;font-weight:700;color:var(--c2);cursor:pointer;flex-shrink:0;">−</button>
         <input id="edad" type="number" min="15" max="80" value="${ans.edad||25}"
-          style="flex:1;height:50px;border:none;text-align:center;font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;color:var(--c2);outline:none;">
+          style="flex:1;height:50px;border:none;text-align:center;font-family:inherit;font-weight:800;font-size:1.1rem;color:var(--c2);outline:none;">
         <button onclick="adj('edad',1)" style="width:52px;background:var(--c6);border:none;font-size:1.4rem;font-weight:700;color:var(--c2);cursor:pointer;flex-shrink:0;">+</button>
       </div>
     </div>
@@ -525,6 +525,7 @@ function showSuccess(synced){
 // ── STORAGE ──────────────────────────────────────────
 function saveLocal(r){
   const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  if(all.some(x=>x.id===r.id)) return;
   all.push({...r,_sent:false,_at:new Date().toISOString()});
   localStorage.setItem(STORAGE_KEY,JSON.stringify(all));
 }
@@ -537,6 +538,9 @@ function markSent(id){
 
 async function sendToSheets(r){
   if(!navigator.onLine) return false;
+  const all=JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
+  const stored=all.find(x=>x.id===r.id);
+  if(stored&&stored._sent) return true;
   try{
     await fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(r)});
     return true;
